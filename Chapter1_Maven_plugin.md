@@ -58,6 +58,9 @@ To package a Spring Boot application as jar/war and to run it, we can use the Sp
 ## Advanced ##
 
 ### Goals ###
+
+Following Goals are available ; we can run them using `mvn spring-boot:<goal name>`
+
 | Goal | Description
 | :--- | :--- |
 |spring-boot:help| Display help information on spring-boot-maven-plugin |
