@@ -120,7 +120,9 @@ mvn spring-boot:help -Ddetail=true -Dgoal=stop
         - one original jar with name `xxx.jar.original`; this is the result of the `mavn package`, thsi file is not directly executable 
         - the executable jar `xxx.jar`; this file is excutable file and containes all dependent jars . The stricture would look like this 
 
-           <PIC NEEDED>
+           ![image](https://user-images.githubusercontent.com/8110582/124010941-1b207f80-d9fd-11eb-8fb9-6eb0c3cc07b7.png)
+	   BOOT-INF contains all the dependent jars ( coming from maven dependency)
+	   
         - Sometimes it is also called fat jar
 
  
