@@ -14,9 +14,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springSec</name>
 	<description>Demo project for Spring Boot for Spring Security</description>
-
-
-
+	
+	<packaging>war</packaging>
+	
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -57,10 +57,13 @@
 								to pass some parameters specific to the goal which is not mentioned in the 
 								Parent pom -->
 							<goal>repackage</goal>
-
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

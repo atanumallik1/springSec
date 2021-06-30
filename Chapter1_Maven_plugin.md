@@ -73,9 +73,81 @@ Following Goals are available ; we can run them using `mvn spring-boot:<goal nam
 
 
 
-- Difference bwteen spring-boot:run and spring-boot:start
-- how to find the possible parameters for each of these spring boot Goals
+To find further details about a Sprig boot goal you can use the following command
+````
+mvn spring-boot:help -Ddetail=true -Dgoal=run
+mvn spring-boot:help -Ddetail=true -Dgoal=start
+mvn spring-boot:help -Ddetail=true -Dgoal=stop
+````
 
+- Difference bwteen spring-boot:run and spring-boot:start
+
+| spring-boot:start | spring-boot:run | 
+| :--- | :--- |
+|  just starts the application directly ; does not block ; allows other goals to execute  | Run an application in place. Block other goals from running|
+|Useful for integration tests ||
+|need to explicitly stop the run by goal: stop||
+
+
+
+- how to find the possible parameters for each of these spring boot Goals \
+    * you can use maven commad help
+    * You can read teh documentation   
+
+## jar or war
+- if you do not specify the packaging type by default it is jar. Here `maven-jar-plugin` kicks in and produces the jar file. 
+- if you add following section it will produce war. Here `maven-war-plugin` kicks in and produces the jar file. 
+````
+	<packaging>war</packaging>
+````
+
+## Repackaging 
+
+- The maven `package` goal takes the compiled code and package it in its _distributable_ format, such as a JAR,WAR,EAR
+    -   you can package a maven project using 
+    ````
+    mvn package
+    ````
+    - The output of the command is JAR/WAR. This file only contains the compiled distributibles. It does not contain the dependencies . So this file is not directly executible  
+
+- The spring-boot `repackage` goal that repackages the JAR produced by maven by specifying the main class and make it _executable_ using an embedded container.
+    - you can explicitly  re-package a maven project using (  if you hace added the spring-boot-maven-plugin then it will also automatically trigger the repackaging)
+    ````
+    mvn spring-boot:repackage
+    ````
+    - A repackaged file also contains the dependencies, so it is dircetly execution ready.
+    - after repackage there will be following 2 files in target 
+        - one original jar with name `xxx.jar.original`; this is the result of the `mavn package`, thsi file is not directly executable 
+        - the executable jar `xxx.jar`; this file is excutable file and containes all dependent jars . The stricture would look like this 
+
+           <PIC NEEDED>
+        - Sometimes it is also called fat jar
+
+ 
+## Actuators 
+
+## Integration test 
+
+
+
+# Some learnings from Maven world
+- If you are using `spring-boot-starter-parent` as your parent PoM you get all the plugins in your project by default ; but they do not execute by default unless you add them in plugin section 
+````
+<build>
+		<plugin>
+				<groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin<artifactId>
+                </plugin>
+		</plugins>
+	</build>
+
+````
+So it means you need to explicitly add the plugins in the project context even though they are defined in the parent pom
+
+- In `spring-boot-starter-parent` , the `spring-boot-maven-plugin` is configured to execute for goal `repackage`, you can see this in the console. This goal is not not need to mention explicitly in the child pom. If we want to pass additional param in the goal we can add the goal explicitly on child pom.
+
+
+- However for plugins like `maven-jar-plugin` or `maven-war-plugin` it does not work like that. In this pom it is added onlt in parent POM and not declared in child pom's plug in , still it is getting invoked ( you can check from the log )
 
 
 
