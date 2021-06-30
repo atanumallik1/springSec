@@ -130,6 +130,12 @@ mvn spring-boot:help -Ddetail=true -Dgoal=stop
         - Sometimes it is also called fat jar
 
  
+Now we learnt `repackaging` produces Fat Jar/War which is sometimes called _layered_ JAR/WAR
+
+A repackaged jar contains the application’s classes and dependencies in BOOT-INF/classes and BOOT-INF/lib respectively. Similarly, an executable war contains the application’s classes in WEB-INF/classes and dependencies in WEB-INF/lib and WEB-INF/lib-provided. For cases where a docker image needs to be built from the contents of a jar or war, it’s useful to be able to separate these directories further so that they can be written into distinct layers.
+
+Layered archives use the same layout as a regular repackaged jar or war, but include an additional meta-data file that describes each layer.
+
 ## Actuators 
 
 ## Integration test 
