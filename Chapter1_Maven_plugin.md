@@ -120,7 +120,8 @@ mvn spring-boot:help -Ddetail=true -Dgoal=stop
         - one original jar with name `xxx.jar.original`; this is the result of the `mavn package`, thsi file is not directly executable 
         - the executable jar `xxx.jar`; this file is excutable file and containes all dependent jars . The structure would look like this 
 
-           ![image](https://user-images.githubusercontent.com/8110582/124010941-1b207f80-d9fd-11eb-8fb9-6eb0c3cc07b7.png)
+           ![image](https://user-images.githubusercontent.com/8110582/124010941-1b207f80-d9fd-11eb-8fb9-6eb0c3cc07b7.png)  inside BOOT-INF![image](https://user-images.githubusercontent.com/8110582/124011950-32ac3800-d9fe-11eb-9fdf-4287e5b07cbe.png)
+
 	   \
        BOOT-INF contains all the dependent jars ( coming from maven dependency)
        \
