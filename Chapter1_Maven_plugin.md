@@ -136,11 +136,21 @@ A repackaged jar contains the application’s classes and dependencies in BOOT-I
 
 Layered archives use the same layout as a regular repackaged jar or war, but include an additional meta-data file that describes each layer.
 
+
+read more here --> 
+- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#packaging 
+
+- [ MUST READ ] https://www.baeldung.com/spring-boot-run-maven-vs-executable-jar 
+
+## OCI and Docker Image 
+- https://www.baeldung.com/docker-layers-spring-boot 
+
 ## Actuators 
 
 ## Integration test 
-
-
+- https://vorba.ch/2016/integration-testing-spring-boot-travis-saucelabs.html
+- https://github.com/pvorb/spring-boot-integration-test-example
+- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#integration-tests
 
 # Some learnings from Maven world
 - If you are using `spring-boot-starter-parent` as your parent PoM you get all the plugins in your project by default ; but they do not execute by default unless you add them in plugin section 
