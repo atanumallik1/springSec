@@ -148,6 +148,7 @@ read more here -->
 ## Actuators 
 
 ## Integration test 
+- https://www.baeldung.com/maven-integration-test
 - https://vorba.ch/2016/integration-testing-spring-boot-travis-saucelabs.html
 - https://github.com/pvorb/spring-boot-integration-test-example
 - https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#integration-tests
