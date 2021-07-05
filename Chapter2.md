@@ -17,8 +17,20 @@ localhost:8080/logout
 ````
 
 
-## Basic Authentication flow
+## Basic Authentication with SPring Boot
 ![image](https://user-images.githubusercontent.com/8110582/124506704-d96f4a80-dde9-11eb-9bf9-795b62a8c532.png)
+
+Basic auth needs to send credentials in every call; so it is best suited for external communication 
+
+* with web browser you will see an input box for the credentials 
+* this is not a good approach for application ; so application can pass the following header 
+````
+Authorize : Basic base64(username:password)
+```` 
+example value  `Basic dXNlcjphYmMxMjM=`
+
+In Postman
+
 
 
 Markdown Ref: https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md
