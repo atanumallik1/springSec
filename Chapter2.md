@@ -74,9 +74,18 @@ Only students can access URL which starts with `/api/`. Notice that we are using
 ````
 
 ### Permission Based Authetication 
+
+Authority = Permission
+
 ![Image](./images/PermissionBAsedAuth.png)
 We can enforce it in the configure nethod
 We are using `hasAuthority()`
-
+````
+.antMatchers(HttpMethod.PUT ,"/management/api/v1").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.POST ,"/management/api/v1").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.DELETE,"/management/api/v1").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
+		.antMatchers(HttpMethod.GET ,"/management/api/v1").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
+		
+````
 
 Markdown Ref: https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md
