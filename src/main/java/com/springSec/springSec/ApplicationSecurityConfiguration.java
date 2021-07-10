@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +19,8 @@ import com.springSec.configs.ApplicationUserRole;
 
 @Configuration
 @EnableWebSecurity
+// Enable following annotation if we want to put authorization checks on the method level 
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,6 +42,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 		*/
     	
     	// to make it work with authorities 
+    	/*
     	http.csrf().disable() //TODO :Never do this
 	    .authorizeRequests() // Any request must be authenticates
 		.antMatchers("/", "/index").permitAll() // except these urls
@@ -48,7 +52,18 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 		.antMatchers(HttpMethod.DELETE,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.getPermission())
 		.antMatchers(HttpMethod.GET ,"/management/api/v1/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
 		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
+        */
+    	
+    	
+    	
+    	// to make it work with authorities 
+    	http.csrf().disable() //TODO :Never do this
+	    .authorizeRequests() // Any request must be authenticates
+		.antMatchers("/", "/index").permitAll() // except these urls
+		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
+		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
 
+    	
     	
 
     }

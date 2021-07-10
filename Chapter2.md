@@ -87,5 +87,26 @@ We are using `hasAuthority()`
 		.antMatchers(HttpMethod.GET ,"/management/api/v1").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
 		
 ````
+We can also do it by annotation on a method. For it following steps are needed  
+````
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+    	// to make it work with authorities 
+    	http.csrf().disable() //TODO :Never do this
+	    .authorizeRequests() // Any request must be authenticates
+		.antMatchers("/", "/index").permitAll() // except these urls
+		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
+		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
+
+    	
+    	
+
+    }
+
+````
 
 Markdown Ref: https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md
