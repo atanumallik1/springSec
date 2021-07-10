@@ -32,5 +32,51 @@ example value  `Basic dXNlcjphYmMxMjM=`
 In Postman
 
 
+## User Details Service
+Allows define a user details service `UserDetailsService`. 
+We need to a User with following properties 
+* Username ( Must have )
+* Encoded Password ( Must have )
+* Roles ( Must have )
+* authorities ( Optional but highly recommended )
+* and more 
+
+### InMemoryUserDetailManager 
+`InMemoryUserDetailManager` is a `UserDetailService` 
+
+
+### Roles
+`Role` s comes with `Permission`
+![Image](images/Roles.png)
+In this picture  `Admin` is a Role and there are 4 `Permissions` in it
+
+Roles are Assigned to `Users`
+![Image](./images/RolesToUser.png)
+
+
+## Enforcing API based Authentication 
+We can enforce Role based authentication or Permission based authentication 
+
+
+### Role based Authentication 
+Only students can access URL which starts with `/api/`. Notice that we are using `hasRole`
+````
+ @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+	http.authorizeRequests() // Any request must be authenticates
+		.antMatchers("/", "/index").permitAll() 
+		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
+		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
+
+    }
+    
+````
+
+### Permission Based Authetication 
+![Image](./images/PermissionBAsedAuth.png)
+We can enforce it in the configure nethod
+We are using `hasAuthority()`
+
 
 Markdown Ref: https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md
