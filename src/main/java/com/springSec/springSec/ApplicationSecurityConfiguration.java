@@ -30,7 +30,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     	// to make it work with authorities 
     	http.csrf().disable()
     	//.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
-    	.and()
+    	//.and()
 	    .authorizeRequests() // Any request must be authenticates
 		.antMatchers("/", "/index").permitAll() // except these urls
 		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
