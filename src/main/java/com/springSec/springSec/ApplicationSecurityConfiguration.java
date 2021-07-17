@@ -1,5 +1,7 @@
 package com.springSec.springSec;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,11 +63,31 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 	    .authorizeRequests() // Any request must be authenticates
 		.antMatchers("/", "/index").permitAll() // except these urls
 		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
-		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
-
-    	
-    	
-
+		.anyRequest().authenticated().and()
+		.formLogin()  // mechanism for authentication is basic
+			.loginPage("/login") // custom login page
+    		.permitAll()
+    		.defaultSuccessUrl("/courses",true)
+    		// If we want to change teh default parameters for password, username and remember-me
+    		// you need to change the parameters in Thymeleaf login page
+    		//.passwordParameter("mypassword")
+    		//.usernameParameter("")
+    		
+    		
+    	.and()
+    	.rememberMe() //Default 2 weeks
+	    	.tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+	    	.key("somethingverysecured") // key for the DB where the MD5 hash is stored for userid + timetamp
+    	    //.rememberMeParameter(null)
+	    	//Optional part 
+    	.and()
+    	.logout()
+    	.logoutUrl("/logout")
+    	.clearAuthentication(true)
+    	.invalidateHttpSession(true)
+    	//Coockies are copied from network response 
+         .deleteCookies("JSESSIONID","remember-me")
+         .logoutSuccessUrl("/login");
     }
     
     

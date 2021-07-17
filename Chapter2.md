@@ -109,4 +109,50 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
 ````
 
+
+### Basic Auth 
+* simple and fast
+* need to add `Authorize` header in every call 
+* can not log out
+![image](images/basicAuth.png)
+
+## Form Based
+* standard for most websites'
+* can log out 
+* full controll 
+![image](images/formBased.png)
+
+you can logout using 
+localhost:8080/logout
+
+### Remember Me feature
+![image](images/rem.png)
+
+by default the session expired after 30 mins of inactivity 
+
+We can activate Remember me if we are using Form Login with following setting
+````
+http.csrf().disable() //TODO :Never do this
+		.formLogin()  // mechanism for authentication is basic
+        .loginPage("/login") // custom login page
+    	.permitAll()
+    	.defaultSuccessUrl("/courses",true)
+    	.and()
+    	.rememberMe(); //Default 2 weeks
+````
+In the remember ME flow
+* on successful Log in, server returns  following coockies as the part of HTTP response 
+````
+JSESSIONID=8E7760EF28C1F7B1288DB6159A9BE352; Path=/; HttpOnly
+````
+````
+remember-me=bGluZGE6MTYyNzc1NzQwNjU4Mjo0MDA4ZDY0MWIwMmQwZTJlNGQwZjllZjJiOWZjMjNmOQ; Max-Age=1209600; Expires=Sat, 31-Jul-2021 18:50:06 GMT; Path=/; HttpOnly
+````
+
+The subsequesnt requests needs to send these cookies back
+![image](images/rememberme.png)
+
+Spring boot uses in memory DB to store the sessionID and remember-me id. We can store in REDIS or any other DB
+
+
 Markdown Ref: https://github.com/tchapi/markdown-cheatsheet/blob/master/README.md
