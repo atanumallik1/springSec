@@ -4,60 +4,41 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import com.springSec.configs.ApplicationUserPermissions;
 import com.springSec.configs.ApplicationUserRole;
+import com.springSec.configs.auth.ApplicationUserService;
 
 @Configuration
 @EnableWebSecurity
 // Enable following annotation if we want to put authorization checks on the method level 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan("com.springSec.configs.auth")
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Override
+	private final PasswordEncoder passwordEncoder;
+	private final ApplicationUserService applicationUserService;
+
+	@Autowired
+    public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder,
+    		ApplicationUserService applicationUserService) {
+		this.passwordEncoder = passwordEncoder;
+		this.applicationUserService = applicationUserService;
+	}
+
+
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
-/*
-	http.csrf().disable() //TODO :Never do this
-	    .authorizeRequests() // Any request must be authenticates
-		.antMatchers("/", "/index").permitAll() // except these urls
-		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
-		.antMatchers(HttpMethod.PUT ,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
-		.antMatchers(HttpMethod.POST ,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
-		.antMatchers(HttpMethod.DELETE,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.name())
-		.antMatchers(HttpMethod.GET ,"/management/api/v1/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
-		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic 
-		
-		*
-		*/
-    	
-    	// to make it work with authorities 
-    	/*
-    	http.csrf().disable() //TODO :Never do this
-	    .authorizeRequests() // Any request must be authenticates
-		.antMatchers("/", "/index").permitAll() // except these urls
-		.antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
-		.antMatchers(HttpMethod.PUT ,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.getPermission())
-		.antMatchers(HttpMethod.POST ,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.getPermission())
-		.antMatchers(HttpMethod.DELETE,"/management/api/v1/**").hasAnyAuthority(ApplicationUserPermissions.COURSE_WRITE.getPermission())
-		.antMatchers(HttpMethod.GET ,"/management/api/v1/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())
-		.anyRequest().authenticated().and().httpBasic(); // mechanism for authentication is basic
-        */
-    	
-    	
-    	
+
+	
     	// to make it work with authorities 
     	http.csrf().disable() //TODO :Never do this
 	    .authorizeRequests() // Any request must be authenticates
@@ -89,59 +70,35 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
          .deleteCookies("JSESSIONID","remember-me")
          .logoutSuccessUrl("/login");
     }
-    
-    
-    
-    /**
-     *         Using User Default Service
-     * 1.  We need to use with Roles ; without Rolesconfig it will not work 
-     * 2.  We need to pass the password using PasswordEncoder 
-     * 
-     *  
-     * 
-     * 
-     * 
-    **/
- 
-   // Following method shows how to use with role : to use you need to  
-   // rename userDetailsService_using_Role to userDetailsService
-   // and uncomment the following 2 annotations 
-   // @Bean
-   // @Override
-    protected UserDetailsService userDetailsService_using_Role() {
-
-	// Following code does not use password encoder this will thorw exception ; you
-	// always need to use password encoder
-	// UserDetails annasmithUser =
-	// User.builder().username("annasmith").password("password").roles("STUDENT").build();
-
-	UserDetails annasmithUser = User.builder().username("annasmith")
-		.password(passwordEncoder.encode("password"))
-		.roles(ApplicationUserRole.STUDENT.name()).build();
-
-	UserDetails lindaUser = User.builder().username("linda")
-		.password(passwordEncoder.encode("password123"))
-		.roles(ApplicationUserRole.ADMIN.name()).build();
 	
-	
-	UserDetails tomUser = User.builder().username("tom")
-			.password(passwordEncoder.encode("password123"))
-			.roles(ApplicationUserRole.ADMINTRAINEE.name()).build();
-
-	return new InMemoryUserDetailsManager(annasmithUser, lindaUser, tomUser);
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		 auth.authenticationProvider(daoAuthenticationProvider());
+	}
+    
+    
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+    	
+    	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    	provider.setPasswordEncoder(passwordEncoder);
+    	provider.setUserDetailsService(applicationUserService);
+    	
+    	
+    	return provider;
+    	
     }
     
+    
+     
+   /* 
     
     @Bean
     @Override
     protected UserDetailsService userDetailsService() {
 
-	// Following code does not use password encoder this will thorw exception ; you
-	// always need to use password encoder
-	// UserDetails annasmithUser =
-	// User.builder().username("annasmith").password("password").roles("STUDENT").build();
-
-	UserDetails annasmithUser = User.builder().username("annasmith")
+	//Use Builder to create simple static user 
+    UserDetails annasmithUser = User.builder().username("annasmith")
 		.password(passwordEncoder.encode("password"))
 		.authorities(ApplicationUserRole.STUDENT.getGrantedAuthorities())
 		.build();
@@ -158,6 +115,6 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 			.build();
 
 	return new InMemoryUserDetailsManager(annasmithUser, lindaUser, tomUser);
-    }
+    }*/
 
 }
